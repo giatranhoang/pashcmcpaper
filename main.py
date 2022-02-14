@@ -44,6 +44,8 @@ df_columns = df[['fields.Event Title', 'fields.Agenda & Description & Blurb', 'f
 
 df_filtered = df_columns[(df_columns['fields.Start Date Event'] > a_date[0].strftime('%Y-%m-%d')) & (df_columns['fields.Start Date Event'] < a_date[1].strftime('%Y-%m-%d'))]
 
+st.dataframe(df_filtered)
+
 # st.dataframe(df[['fields.Event Title', 'fields.Start Date Event', 'fields.Start Date Time Event', 'fields.Room/Platform', 'fields.POC']][df['fields.Start Date Event'] == a_date[0]])
 
 # Docs Creation
@@ -54,55 +56,12 @@ def CreateDocs():
 
     document.add_heading('For RSO', 0)
 
-    p = document.add_paragraph('A plain paragraph having some ')
-    p.add_run('bold').bold = True
-    p.add_run(' and some ')
-    p.add_run('italic.').italic = True
-
-    document.add_heading('Heading, level 1', level=1)
-    document.add_paragraph('Intense quote', style='Intense Quote')
-
-    document.add_paragraph(
-        'first item in unordered list', style='List Bullet'
-    )
-    document.add_paragraph(
-        'first item in ordered list', style='List Number'
-    )
-
-    # document.add_picture('monty-truth.png', width=Inches(1.25))
-
-    records = (
-        (3, '101', 'Spam'),
-        (7, '422', 'Eggs'),
-        (4, '631', 'Spam, spam, eggs, and spam')
-    )
-
-    table = document.add_table(rows=1, cols=3)
-    hdr_cells = table.rows[0].cells
-    hdr_cells[0].text = 'Qty'
-    hdr_cells[1].text = 'Id'
-    hdr_cells[2].text = 'Desc'
-    for qty, id, desc in records:
-        row_cells = table.add_row().cells
-        row_cells[0].text = str(qty)
-        row_cells[1].text = id
-        row_cells[2].text = desc
-
-    document.add_page_break()
+    for row in df_filtered.itertuples():
+        document.add_paragraph(row[3])
 
     document.save('For RSO.docx')
 
 st.button(label = 'Generate DOCS', on_click=CreateDocs())
-# def DownloadDocs():
-#   # docx
-#   b64 = base64.b64encode(document.encode()).decode()  
-  
-#   # download link
-#   href = f'<a href="data:file/docx;base64,{b64}" download="new_file.docx">Download docx</a>'
-  
-#   st.write(href, unsafe_allow_html=True)
-
-# This is for link generate
 
 import base64
 import os
